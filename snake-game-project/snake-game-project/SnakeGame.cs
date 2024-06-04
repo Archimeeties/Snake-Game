@@ -13,6 +13,10 @@ namespace snake_game_project
 {
     public partial class SnakeGame : Form
     {
+        private Random rand = new Random();
+        private Point foodPosition;
+        private bool isFoodSpawned = false;
+
         // graphics
         private Bitmap offScreenBitmap;
         private Graphics offScreenGraphics;
@@ -45,19 +49,38 @@ namespace snake_game_project
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            Update();
+            UpdateGame();
             graphics.DrawImage(offScreenBitmap, 0, 0);
         }
-        private void Update()
+        private void UpdateGame()
         {
             CheckDirection();
             MoveSnake();
+            SpawnFood();
             DrawGrid();
         }
         private void MoveSnake()
         {
             offScreenGraphics.FillRectangle(Brushes.Black, 0, 0, Width, Height); // changing the values 0 to 200 made it draw in a line following the snake
             offScreenGraphics.FillRectangle(Brushes.White, squareX, squareY, squareSizeX, squareSizeY);
+        }
+        private void SpawnFood()
+        {
+            if (!isFoodSpawned)
+            {
+                // Generate random coordinates for the food
+                int maxX = (this.Width / squareSizeX);
+                int maxY = (this.Height / squareSizeY);
+                int foodX = rand.Next(0, maxX) * squareSizeX;
+                int foodY = rand.Next(0, maxY) * squareSizeY;
+
+                // Set the food position
+                foodPosition = new Point(foodX, foodY);
+
+                isFoodSpawned = true;
+            }
+            // Draw the food
+            offScreenGraphics.FillRectangle(Brushes.White, foodPosition.X, foodPosition.Y, squareSizeX, squareSizeY);
         }
         private void CheckDirection()
         {
@@ -67,13 +90,13 @@ namespace snake_game_project
                 squareY -= 20;
                 if (squareY < 0)  // If the snake hits the top border
                 {
-                    squareY = this.Height - 70;  // Move it to the bottom
+                    squareY = this.Height - 58;  // Move it to the bottom
                 }
             }
             if (isDown)
             {
                 squareY += 20;
-                if (squareY >= this.Height - 70)  // If the snake hits the bottom border
+                if (squareY >= this.Height - 50)  // If the snake hits the bottom border
                 {
                     squareY = 0;  // Move it to the top
                 }
@@ -83,7 +106,7 @@ namespace snake_game_project
                 squareX -= 20;
                 if (squareX < 0)  // If the snake hits the left border
                 {
-                    squareX = this.Width - 50;  // Move it to the right
+                    squareX = this.Width - 55;  // Move it to the right
                 }
             }
             if (isRight)
