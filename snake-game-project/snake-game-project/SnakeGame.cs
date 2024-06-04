@@ -93,22 +93,35 @@ namespace snake_game_project
         {
             if (foodPosition == Point.Empty)
             {
-                // Generate random coordinates for the food
-                int maxX = (this.Width / squareSize) - 1;
-                int maxY = (this.Height / squareSize) - 1;
-                int foodX = rand.Next(0, maxX) * squareSize;
-                int foodY = rand.Next(0, maxY) * squareSize;
+                bool validPosition = false;
+                while (!validPosition)
+                {
+                    // Generate random coordinates for the food
+                    int maxX = (this.Width / squareSize) - 1;
+                    int maxY = (this.Height / squareSize) - 1;
+                    int foodX = rand.Next(0, maxX) * squareSize;
+                    int foodY = rand.Next(0, maxY) * squareSize;
 
-                // Set the food position
-                foodPosition = new Point(foodX, foodY);
+                    // Set the food position
+                    foodPosition = new Point(foodX, foodY);
+
+                    // Check if the food position collides with any part of the snake
+                    validPosition = true;
+                    foreach (Point part in snake)
+                    {
+                        if (part == foodPosition)
+                        {
+                            validPosition = false;
+                            break;
+                        }
+                    }
+                }
             }
-
-            // Clear previous food position
-            offScreenGraphics.FillRectangle(Brushes.Black, foodPosition.X, foodPosition.Y, squareSize, squareSize);
 
             // Draw the food
             offScreenGraphics.FillRectangle(Brushes.White, foodPosition.X, foodPosition.Y, squareSize, squareSize);
         }
+
 
         private void CheckCollisions()
         {
