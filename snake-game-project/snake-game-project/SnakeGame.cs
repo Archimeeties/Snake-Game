@@ -21,7 +21,8 @@ namespace snake_game_project
         // square variables
         private int squareX = 0;
         private int squareY = 0;
-        private int squareSize = 20;
+        private int squareSizeX = 20;
+        private int squareSizeY = 20;
 
         // player variable
         private bool isDown = false;
@@ -39,7 +40,7 @@ namespace snake_game_project
             graphics = this.CreateGraphics();
             this.DoubleBuffered = true;
 
-            timer1.Interval = 100; // 16 should be approximately 60 FPS, set to 1 for more updates per second
+            timer1.Interval = 200; // 16 should be approximately 60 FPS, set to 1 for more updates per second
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -55,26 +56,43 @@ namespace snake_game_project
         }
         private void MoveSnake()
         {
-            offScreenGraphics.FillRectangle(Brushes.Black, 0, 0, Width, Height);
-            offScreenGraphics.FillRectangle(Brushes.White, squareX, squareY, squareSize, squareSize);
+            offScreenGraphics.FillRectangle(Brushes.Black, 0, 0, Width, Height); // changing the values 0 to 200 made it draw in a line following the snake
+            offScreenGraphics.FillRectangle(Brushes.White, squareX, squareY, squareSizeX, squareSizeY);
         }
         private void CheckDirection()
         {
+            // Update the snake's position based on direction
             if (isUp)
             {
                 squareY -= 20;
+                if (squareY < 0)  // If the snake hits the top border
+                {
+                    squareY = this.Height - 70;  // Move it to the bottom
+                }
             }
-            else if (isDown)
+            if (isDown)
             {
                 squareY += 20;
+                if (squareY >= this.Height - 70)  // If the snake hits the bottom border
+                {
+                    squareY = 0;  // Move it to the top
+                }
             }
-            else if (isRight)
-            {
-                squareX += 20;
-            }
-            else if (isLeft)
+            if (isLeft)
             {
                 squareX -= 20;
+                if (squareX < 0)  // If the snake hits the left border
+                {
+                    squareX = this.Width - 50;  // Move it to the right
+                }
+            }
+            if (isRight)
+            {
+                squareX += 20;
+                if (squareX >= this.Width - 50)  // If the snake hits the right border
+                {
+                    squareX = 0;  // Move it to the left
+                }
             }
         }
         private void MoveInput(KeyEventArgs e)
@@ -82,7 +100,7 @@ namespace snake_game_project
             switch (e.KeyCode)
             {
                 case Keys.W:
-                    isDown = true;
+                    isDown = false;
                     isLeft = false;
                     isRight = false;
                     isUp = true;
