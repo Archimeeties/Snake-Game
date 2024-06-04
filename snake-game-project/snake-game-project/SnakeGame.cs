@@ -122,7 +122,7 @@ namespace snake_game_project
             // snake runs into the walls
             if (snake[0].X < 0 || snake[0].X >= this.Width || snake[0].Y < 0 || snake[0].Y >= this.Height)
             {
-                // Add logic for end game
+                GameOver();
             }
 
             // snake runs into itself
@@ -130,7 +130,7 @@ namespace snake_game_project
             {
                 if (snake[0] == snake[i])
                 {
-                    // add logic for end game
+                    GameOver();
                 }
             }
         }
@@ -158,7 +158,12 @@ namespace snake_game_project
         }
 
 
-
+        private void GameOver()
+        {
+            timer1.Stop();
+            MessageBox.Show("Game Over!");
+            this.Close();
+        }
 
         private void DrawGrid()
         {
