@@ -51,6 +51,7 @@ namespace snake_game_project
         {
             CheckDirection();
             MoveSnake();
+            DrawGrid();
         }
         private void MoveSnake()
         {
@@ -131,20 +132,20 @@ namespace snake_game_project
 
 
 
-        //private void DrawGrid()
-        //{
-        //    this.BackColor = Color.Black;
-        //    for (int x = 0; x < Width; x += 20)
-        //    {
-        //        //Draw vertical lines
-        //        graphics.DrawLine(Pens.White, x, 0, x, this.Height);
-        //    }
+        private void DrawGrid()
+        {
+            this.BackColor = Color.Black;
+            for (int x = 0; x < Width; x += 20)
+            {
+                //Draw vertical lines
+                offScreenGraphics.DrawLine(Pens.White, x, 0, x, this.Height);
+            }
 
-        //    for (int y = 0; y < Height; y += 20)
-        //    {
-        //        //Draw horizontal lines
-        //        graphics.DrawLine(Pens.White, 0, y, this.Width, y);
-        //    }
-        //}
+            for (int y = 0; y < Height; y += 20)
+            {
+                //Draw horizontal lines
+                offScreenGraphics.DrawLine(Pens.White, 0, y, this.Width, y);
+            }
+        }
     }
 }
