@@ -56,6 +56,7 @@ namespace snake_game_project
         {
             CheckDirection();
             MoveSnake();
+            CheckForFoodCollision();
             SpawnFood();
             DrawGrid();
         }
@@ -66,22 +67,39 @@ namespace snake_game_project
         }
         private void SpawnFood()
         {
-            if (!isFoodSpawned)
+            if (foodPosition == Point.Empty)
             {
                 // Generate random coordinates for the food
-                int maxX = (this.Width / squareSizeX);
-                int maxY = (this.Height / squareSizeY);
+                int maxX = (this.Width / squareSizeX) - 1;
+                int maxY = (this.Height / squareSizeY) - 1;
                 int foodX = rand.Next(0, maxX) * squareSizeX;
                 int foodY = rand.Next(0, maxY) * squareSizeY;
 
                 // Set the food position
                 foodPosition = new Point(foodX, foodY);
-
-                isFoodSpawned = true;
             }
+
+            // Clear previous food position
+            offScreenGraphics.FillRectangle(Brushes.Black, foodPosition.X, foodPosition.Y, squareSizeX, squareSizeY);
+
             // Draw the food
             offScreenGraphics.FillRectangle(Brushes.White, foodPosition.X, foodPosition.Y, squareSizeX, squareSizeY);
         }
+
+        private void CheckForFoodCollision()
+        {
+            // Check if the snake's head collides with the food exactly at its position
+            if (squareX == foodPosition.X && squareY == foodPosition.Y)
+            {
+                // Clear previous food position
+                offScreenGraphics.FillRectangle(Brushes.Black, foodPosition.X, foodPosition.Y, squareSizeX, squareSizeY);
+
+                // Respawn the food
+                foodPosition = Point.Empty;
+                SpawnFood();
+            }
+        }
+
         private void CheckDirection()
         {
             // Update the snake's position based on direction
@@ -106,13 +124,13 @@ namespace snake_game_project
                 squareX -= 20;
                 if (squareX < 0)  // If the snake hits the left border
                 {
-                    squareX = this.Width - 55;  // Move it to the right
+                    squareX = this.Width - 35;  // Move it to the right
                 }
             }
             if (isRight)
             {
                 squareX += 20;
-                if (squareX >= this.Width - 50)  // If the snake hits the right border
+                if (squareX >= this.Width - 20)  // If the snake hits the right border
                 {
                     squareX = 0;  // Move it to the left
                 }
@@ -166,6 +184,9 @@ namespace snake_game_project
                     break;
                 case Keys.D:
                     MoveInput(e);
+                    break;
+                case Keys.Escape:
+                    this.Close();
                     break;
             }
         }
